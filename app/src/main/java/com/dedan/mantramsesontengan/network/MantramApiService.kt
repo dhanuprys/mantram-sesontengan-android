@@ -7,15 +7,15 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface MantramApiService {
-    @GET("v1/mantram")
+    @GET("api/v1/mantram")
     suspend fun getMantramTypes(): List<MantramBaseType>
 
-    @GET("v1/mantram/{mantramBaseId}")
+    @GET("api/v1/mantram/{mantramBaseId}")
     suspend fun getMantramSubTypes(
         @Path("mantramBaseId") mantramBaseId: Int
     ): List<MantramSubType>
 
-    @GET("v1/mantram/{mantramBaseId}/{mantramId}")
+    @GET("api/v1/mantram/{mantramBaseId}/{mantramId}")
     suspend fun getMantramDetail(
         @Path("mantramBaseId") mantramBaseId: Int,
         @Path("mantramId") mantramId: Int
