@@ -3,8 +3,8 @@ package com.dedan.mantramsesontengan.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "mantram")
-data class Mantram(
+@Entity(tableName = "saved_mantram")
+data class SavedMantram(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val name: String,
