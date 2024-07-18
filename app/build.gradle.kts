@@ -59,6 +59,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
 
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.2")
