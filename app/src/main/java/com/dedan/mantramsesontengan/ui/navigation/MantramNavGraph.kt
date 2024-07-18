@@ -20,7 +20,9 @@ fun MantramNavHost(
         modifier = modifier
     ) {
         composable(route = MantramSelectBaseDestination.route) {
-            MantramSelectBaseScreen()
+            MantramSelectBaseScreen(
+                onMantramSelect = {}
+            )
         }
     }
 }

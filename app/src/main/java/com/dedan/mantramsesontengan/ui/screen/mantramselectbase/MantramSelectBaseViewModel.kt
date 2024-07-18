@@ -1,5 +1,6 @@
 package com.dedan.mantramsesontengan.ui.screen.mantramselectbase
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -26,6 +27,7 @@ class MantramSelectBaseViewModel(
                 val mantrams = mantramRepository.getMantramTypes()
                 MantramTypesUiState.Success(mantrams)
             } catch (e: Exception) {
+                Log.e("MantramSelectBaseViewModel", "Error fetching mantram types", e)
                 MantramTypesUiState.Error
             }
         }
