@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class LocalSavedMantramRepository(
     private val savedMantramDao: SavedMantramDao
 ) : SavedMantramRepository {
-    override suspend fun getAllSavedMantramsStream(): Flow<gList<SavedMantram>> {
+    override suspend fun getAllSavedMantramsStream(): Flow<List<SavedMantram>> {
        return savedMantramDao.getAllSavedMantrams()
     }
 
