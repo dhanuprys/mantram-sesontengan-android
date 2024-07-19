@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -139,7 +140,7 @@ fun MantramTypesList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = modifier
     ) {
         items(items = mantramTypes) {
@@ -183,8 +184,14 @@ fun MantramTypeCard(
             modifier = Modifier.padding(16.dp)
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = mantramType.name)
-                Text(text = "Mantram Count: ${mantramType.mantramCount}")
+                Text(
+                    text = mantramType.name,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = "Terdapat ${mantramType.mantramCount} mantram",
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

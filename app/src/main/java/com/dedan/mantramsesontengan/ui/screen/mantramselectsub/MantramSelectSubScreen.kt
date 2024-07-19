@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -159,7 +160,7 @@ fun MantramSubTypesList(
     var expandItem by remember { mutableStateOf<MantramSubType?>(null) }
 
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = modifier
     ) {
         items(items = mantramSubTypes) { mantramSubType ->
@@ -211,9 +212,15 @@ fun MantramSubCard(
                     else Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = mantramSubType.name)
+                    Text(
+                        text = mantramSubType.name,
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     if (!expand) {
-                        Text(text = mantramSubType.description.substring(0..50))
+                        Text(
+                            text = mantramSubType.description.take(40),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
                 Icon(
@@ -224,12 +231,18 @@ fun MantramSubCard(
             }
             
             if (expand) {
-                Text(mantramSubType.mantram.substring(0..200))
+                Text(
+                    text = mantramSubType.mantram.take(300),
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = onClick
                 ) {
-                    Text(text = "Buka selengkapnya")
+                    Text(
+                        text = "Buka selengkapnya",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         }
