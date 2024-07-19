@@ -2,6 +2,8 @@ package com.dedan.mantramsesontengan.data.db
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.dedan.mantramsesontengan.model.SavedMantram
@@ -16,8 +18,14 @@ interface SavedMantramDao {
     fun getMantramById(id: Int): Flow<SavedMantram>
 
     @Delete
-    fun deleteMantram(mantram: SavedMantram)
+    suspend fun deleteMantram(mantram: SavedMantram)
+
+    @Query("DELETE FROM saved_mantram WHERE id = :id")
+    suspend fun deleteMantramById(id: Int)
 
     @Update
-    fun updateMantram(mantram: SavedMantram)
+    suspend fun updateMantram(mantram: SavedMantram)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveMantram(mantram: SavedMantram)
 }

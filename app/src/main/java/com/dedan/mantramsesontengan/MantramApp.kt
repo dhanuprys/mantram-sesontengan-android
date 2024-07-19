@@ -3,6 +3,7 @@ package com.dedan.mantramsesontengan
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -120,7 +121,7 @@ fun AudioBottomBar(
         contentPadding = PaddingValues(0.dp),
         modifier = modifier
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize()) {
             if (audioPlayerUiState is AudioPlayerUiState.Loading) {
                 LinearProgressIndicator(
                     progress = { audioPlayerUiState.progress.toFloat() / 100 },
@@ -130,9 +131,7 @@ fun AudioBottomBar(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(16.dp)
+                modifier = Modifier.padding(16.dp)
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     when (audioPlayerUiState) {

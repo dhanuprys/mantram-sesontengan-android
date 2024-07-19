@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.dedan.mantramsesontengan.model.SavedMantram
 
-@Database(entities = [SavedMantram::class], version = 1, exportSchema = false)
+@Database(entities = [SavedMantram::class], version = 2, exportSchema = false)
 abstract class MantramDatabase : RoomDatabase() {
     abstract fun savedMantramDao(): SavedMantramDao
 

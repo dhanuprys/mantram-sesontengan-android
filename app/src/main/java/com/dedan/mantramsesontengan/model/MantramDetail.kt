@@ -15,3 +15,7 @@ data class MantramDetail(
     @SerialName("updated_at")
     val updatedAt: String
 )
+
+fun MantramDetail.toSavedMantram(): SavedMantram {
+    return SavedMantram(id, name, mantram, description, version ?: 0)
+}

@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "saved_mantram")
 data class SavedMantram(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Int,
     val name: String,
     val mantram: String,
     val description: String,
-    val version: String
+    val version: Int
 )

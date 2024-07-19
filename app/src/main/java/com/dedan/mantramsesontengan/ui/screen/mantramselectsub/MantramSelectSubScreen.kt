@@ -5,7 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -211,7 +213,7 @@ fun MantramSubCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = mantramSubType.name)
                     if (!expand) {
-                        Text(text = mantramSubType.description)
+                        Text(text = mantramSubType.description.substring(0..50))
                     }
                 }
                 Icon(
@@ -222,7 +224,8 @@ fun MantramSubCard(
             }
             
             if (expand) {
-                Text("Expanded")
+                Text(mantramSubType.mantram.substring(0..200))
+                Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = onClick
                 ) {

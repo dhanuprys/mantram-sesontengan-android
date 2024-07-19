@@ -78,11 +78,28 @@ fun MantramDetailScreen(
                     Box(modifier = Modifier.weight(1f)) {
                         Text("Detail Mantram")
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_bookmark_border),
-                            contentDescription = null
-                        )
+
+                    if (viewModel.mantramSavedStatusUiState !is MantramSavedStatusUiState.Unknown) {
+                        val isMantramSaved =
+                            viewModel.mantramSavedStatusUiState is MantramSavedStatusUiState.Saved
+                        IconButton(
+                            onClick = {
+                                if (isMantramSaved) {
+                                    viewModel.removeFromBookmark()
+                                } else {
+                                    viewModel.storeInBookmark()
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painter =
+                                if (isMantramSaved)
+                                    painterResource(id = R.drawable.ic_bookmark)
+                                else
+                                    painterResource(id = R.drawable.ic_bookmark_border),
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }
