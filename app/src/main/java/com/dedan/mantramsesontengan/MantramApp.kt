@@ -78,13 +78,10 @@ fun MantramAppBar(
     modifier: Modifier = Modifier,
     onNavigateUp: () -> Unit = {},
     onDrawerOpenRequest: () -> Unit = {},
-    canNavigateBack: Boolean = false
+    canNavigateBack: Boolean = false,
+    content: @Composable () -> Unit = {},
 ) {
     TopAppBar(
-//        colors = TopAppBarDefaults.topAppBarColors(
-//            containerColor = MaterialTheme.colorScheme.primaryContainer,
-//            titleContentColor = MaterialTheme.colorScheme.primary,
-//        ),
         navigationIcon = {
             if (canNavigateBack) {
                 IconButton(onClick = onNavigateUp) {
@@ -102,9 +99,7 @@ fun MantramAppBar(
                 }
             }
         },
-        title = {
-            Text("Mantram Sesontengan")
-        },
+        title = { content() },
         modifier = modifier
     )
 }
@@ -215,7 +210,11 @@ fun MantramAppBarPreview() {
             }
         ) {
             Scaffold(
-                topBar = { MantramAppBar(canNavigateBack = false) },
+                topBar = {
+                    MantramAppBar(canNavigateBack = false) {
+                        Text("Mantram Sesontengan")
+                    }
+                },
                 bottomBar = { AudioBottomBar(audioPlayerUiState = AudioPlayerUiState.Playing) }
             ) {}
         }

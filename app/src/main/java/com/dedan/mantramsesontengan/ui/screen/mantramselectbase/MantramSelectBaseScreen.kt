@@ -52,7 +52,9 @@ fun MantramSelectBaseScreen(
         topBar = {
             MantramAppBar(
                 onDrawerOpenRequest = onDrawerOpenRequest
-            )
+            ) {
+                Text("Mantram Sesontengan")
+            }
         },
         bottomBar = {
             if (audioPlayerUiState.value is AudioPlayerUiState.Playing) {

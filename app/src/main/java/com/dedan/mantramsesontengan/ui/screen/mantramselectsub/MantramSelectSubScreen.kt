@@ -64,7 +64,9 @@ fun MantramSelectSubScreen(
             MantramAppBar(
                 canNavigateBack = true,
                 onNavigateUp = navigateUp
-            )
+            ) {
+                Text("Pilih Mantram")
+            }
         },
         bottomBar = {
             if (audioPlayerUiState.value is AudioPlayerUiState.Playing) {
