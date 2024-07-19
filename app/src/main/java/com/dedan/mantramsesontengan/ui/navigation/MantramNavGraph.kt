@@ -17,6 +17,8 @@ import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBas
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseScreen
 import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubDestination
 import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubScreen
+import com.dedan.mantramsesontengan.ui.screen.savedmantram.SavedMantramDestination
+import com.dedan.mantramsesontengan.ui.screen.savedmantram.SavedMantramScreen
 
 @Composable
 fun MantramNavHost(
@@ -42,7 +44,8 @@ fun MantramNavHost(
                 onDrawerOpenRequest = onDrawerOpenRequest,
                 onMantramSelect = {
                     navController.navigate("${MantramSelectSubDestination.route}/${it.id}")
-                }
+                },
+                navigateToSavedMantram = { navController.navigate(SavedMantramDestination.route) }
             )
         }
         composable(
@@ -82,6 +85,18 @@ fun MantramNavHost(
         ) {
             MantramDetailScreen(
                 globalViewModel = globalViewModel,
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+
+        composable(
+            route = SavedMantramDestination.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
+            SavedMantramScreen(
+                globalViewModel = globalViewModel,
+                navigateToSavedMantramDetail = {},
                 navigateUp = { navController.navigateUp() }
             )
         }

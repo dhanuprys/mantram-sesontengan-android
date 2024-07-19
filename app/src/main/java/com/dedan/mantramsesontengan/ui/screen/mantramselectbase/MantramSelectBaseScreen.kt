@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -44,6 +45,7 @@ fun MantramSelectBaseScreen(
     globalViewModel: GlobalViewModel,
     onDrawerOpenRequest: () -> Unit,
     onMantramSelect: (MantramBaseType) -> Unit,
+    navigateToSavedMantram: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MantramSelectBaseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -64,6 +66,16 @@ fun MantramSelectBaseScreen(
                     onPlayRequest = {},
                     onStopRequest = { globalViewModel.stopAudio() },
                     onRestartRequest = { globalViewModel.restartAudio() }
+                )
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToSavedMantram
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null
                 )
             }
         },

@@ -9,6 +9,7 @@ import com.dedan.mantramsesontengan.MantramApplication
 import com.dedan.mantramsesontengan.ui.screen.mantramdetail.MantramDetailViewModel
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseViewModel
 import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubViewModel
+import com.dedan.mantramsesontengan.ui.screen.savedmantram.SavedMantramViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -28,6 +29,13 @@ object AppViewModelProvider {
         initializer {
             MantramDetailViewModel(
                 this.createSavedStateHandle(),
+                mantramRepository = mantramApplication().container.mantramRepository,
+                savedMantramRepository = mantramApplication().container.savedMantramRepository
+            )
+        }
+
+        initializer {
+            SavedMantramViewModel(
                 mantramRepository = mantramApplication().container.mantramRepository,
                 savedMantramRepository = mantramApplication().container.savedMantramRepository
             )
