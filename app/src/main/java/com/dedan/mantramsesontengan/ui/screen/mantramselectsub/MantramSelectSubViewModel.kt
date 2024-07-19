@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dedan.mantramsesontengan.data.repository.MantramRepository
@@ -11,12 +12,19 @@ import com.dedan.mantramsesontengan.model.MantramSubType
 import kotlinx.coroutines.launch
 
 class MantramSelectSubViewModel(
+    savedStateHandle: SavedStateHandle,
     private val mantramRepository: MantramRepository
 ) : ViewModel() {
+    private val mantramBaseId: Int = checkNotNull(savedStateHandle[MantramSelectSubDestination.mantramBaseIdArg])
+
     var mantramSubTypesUiState: MantramSubTypesUiState by mutableStateOf(MantramSubTypesUiState.Loading)
         private set
 
-    fun getMantramSubTypes(mantramBaseId: Int) {
+    init {
+        getMantramSubTypes()
+    }
+
+    fun getMantramSubTypes() {
         viewModelScope.launch {
             mantramSubTypesUiState = MantramSubTypesUiState.Loading
             mantramSubTypesUiState = try {
