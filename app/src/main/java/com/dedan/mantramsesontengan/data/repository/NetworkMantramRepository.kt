@@ -14,6 +14,6 @@ class NetworkMantramRepository(
     override suspend fun getMantramSubTypes(mantramBaseId: Int): List<MantramSubType> =
         mantramApiService.getMantramSubTypes(mantramBaseId)
 
-    override suspend fun getMantramDetail(mantramBaseId: Int, mantramId: Int): List<MantramDetail> =
+    override suspend fun getMantramDetail(mantramBaseId: Int, mantramId: Int): MantramDetail =
         mantramApiService.getMantramDetail(mantramBaseId, mantramId)
 }

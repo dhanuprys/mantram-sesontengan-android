@@ -9,6 +9,8 @@ data class MantramDetail(
     val name: String,
     val mantram: String,
     val description: String,
+    @SerialName("audio_url")
+    val audioUrl: String,
     val version: String,
     @SerialName("updated_at")
     val updatedAt: String

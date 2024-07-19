@@ -19,5 +19,5 @@ interface MantramApiService {
     suspend fun getMantramDetail(
         @Path("mantramBaseId") mantramBaseId: Int,
         @Path("mantramId") mantramId: Int
-    ): List<MantramDetail>
+    ): MantramDetail
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dedan.mantramsesontengan.MantramApplication
+import com.dedan.mantramsesontengan.ui.screen.mantramdetail.MantramDetailViewModel
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseViewModel
 import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubViewModel
 
@@ -21,6 +22,14 @@ object AppViewModelProvider {
             MantramSelectSubViewModel(
                 this.createSavedStateHandle(),
                 mantramRepository = mantramApplication().container.mantramRepository
+            )
+        }
+
+        initializer {
+            MantramDetailViewModel(
+                this.createSavedStateHandle(),
+                mantramRepository = mantramApplication().container.mantramRepository,
+                savedMantramRepository = mantramApplication().container.savedMantramRepository
             )
         }
     }

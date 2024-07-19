@@ -6,13 +6,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dedan.mantramsesontengan.ui.screen.mantramdetail.MantramDetailDestination
+import com.dedan.mantramsesontengan.ui.screen.mantramdetail.MantramDetailScreen
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseDestination
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseScreen
 import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubDestination
 import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubScreen
-import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubViewModel
 
 @Composable
 fun MantramNavHost(
@@ -41,8 +41,26 @@ fun MantramNavHost(
             )
         ) {
             MantramSelectSubScreen(
-                onMantramSubSelect = { TODO() }
+                onMantramSubSelect = { mantramSubType, mantramBaseId ->
+                    navController.navigate("${MantramDetailDestination.route}/${mantramBaseId}/${mantramSubType.id}")
+                }
             )
+        }
+
+        composable(
+            route = MantramDetailDestination.routeWithArgs,
+            arguments = listOf(
+                navArgument(
+                    name = MantramDetailDestination.mantramBaseIdArg,
+                    builder = { type = NavType.IntType }
+                ),
+                navArgument(
+                    name = MantramDetailDestination.mantramIdArg,
+                    builder = { type = NavType.IntType }
+                )
+            )
+        ) {
+            MantramDetailScreen()
         }
     }
 }

@@ -15,7 +15,7 @@ class MantramSelectSubViewModel(
     savedStateHandle: SavedStateHandle,
     private val mantramRepository: MantramRepository
 ) : ViewModel() {
-    private val mantramBaseId: Int = checkNotNull(savedStateHandle[MantramSelectSubDestination.mantramBaseIdArg])
+    val mantramBaseId: Int = checkNotNull(savedStateHandle[MantramSelectSubDestination.mantramBaseIdArg])
 
     var mantramSubTypesUiState: MantramSubTypesUiState by mutableStateOf(MantramSubTypesUiState.Loading)
         private set

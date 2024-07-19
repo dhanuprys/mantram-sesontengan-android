@@ -46,7 +46,7 @@ object MantramSelectSubDestination : NavigationDestination {
 
 @Composable
 fun MantramSelectSubScreen(
-    onMantramSubSelect: (MantramSubType) -> Unit,
+    onMantramSubSelect: (MantramSubType, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MantramSelectSubViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -55,7 +55,9 @@ fun MantramSelectSubScreen(
     ) { innerPadding ->
         MantramSelectSubBody(
             mantramSubTypesUiState = viewModel.mantramSubTypesUiState,
-            onMantramSubSelect = onMantramSubSelect,
+            onMantramSubSelect = {
+                onMantramSubSelect(it, viewModel.mantramBaseId)
+            },
             modifier = Modifier.padding(innerPadding)
         )
     }
