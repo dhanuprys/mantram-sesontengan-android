@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseDestination
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseScreen
+import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubDestination
+import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubScreen
 
 @Composable
 fun MantramNavHost(
@@ -22,6 +24,11 @@ fun MantramNavHost(
         composable(route = MantramSelectBaseDestination.route) {
             MantramSelectBaseScreen(
                 onMantramSelect = {}
+            )
+        }
+        composable(route = MantramSelectSubDestination.routeWithArgs) {
+            MantramSelectSubScreen(
+                onMantramSubSelect = {}
             )
         }
     }

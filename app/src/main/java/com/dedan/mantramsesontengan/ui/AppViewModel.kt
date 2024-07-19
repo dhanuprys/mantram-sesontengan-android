@@ -6,11 +6,18 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dedan.mantramsesontengan.MantramApplication
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseViewModel
+import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             MantramSelectBaseViewModel(
+                mantramRepository = mantramApplication().container.mantramRepository
+            )
+        }
+
+        initializer {
+            MantramSelectSubViewModel(
                 mantramRepository = mantramApplication().container.mantramRepository
             )
         }
