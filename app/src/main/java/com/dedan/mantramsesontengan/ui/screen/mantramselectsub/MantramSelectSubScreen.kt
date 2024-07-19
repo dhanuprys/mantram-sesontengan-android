@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -72,7 +73,7 @@ fun MantramSelectSubBody(
         is MantramSubTypesUiState.Success -> MantramSubTypesList(
             mantramSubTypes = mantramSubTypesUiState.data,
             onSelect = onMantramSubSelect,
-            modifier = modifier
+            modifier = modifier.padding(16.dp)
         )
     }
 }
@@ -113,8 +114,7 @@ fun MantramSelectSubBody_Success() {
                     MantramSubType(3, "Test3", "Test3", "Test3")
                 )
             ),
-            onMantramSubSelect = {},
-            modifier = Modifier.padding(16.dp)
+            onMantramSubSelect = {}
         )
     }
 }
@@ -134,7 +134,7 @@ fun MantramSubTypesList(
         items(items = mantramSubTypes) { mantramSubType ->
             MantramSubCard(
                 mantramSubType = mantramSubType,
-                onExpandRequest = { expandItem = mantramSubType },
+                onExpandRequest = { expandItem = it },
                 expand = expandItem == mantramSubType,
                 onClick = { onSelect(mantramSubType) },
                 modifier = Modifier.fillMaxWidth()
@@ -170,7 +170,9 @@ fun MantramSubCard(
     Card(
         modifier = modifier
             .animateContentSize()
-            .clickable { onExpandRequest(mantramSubType) },
+            .clickable {
+                onExpandRequest(if (expand) null else mantramSubType)
+            },
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -192,6 +194,11 @@ fun MantramSubCard(
             
             if (expand) {
                 Text("Expanded")
+                Button(
+                    onClick = onClick
+                ) {
+                    Text(text = "Buka selengkapnya")
+                }
             }
         }
     }

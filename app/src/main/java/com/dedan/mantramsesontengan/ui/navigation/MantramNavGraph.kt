@@ -41,7 +41,7 @@ fun MantramNavHost(
             )
         ) {
             MantramSelectSubScreen(
-                onMantramSubSelect = {}
+                onMantramSubSelect = { TODO() }
             )
         }
     }
