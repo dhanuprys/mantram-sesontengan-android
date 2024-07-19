@@ -1,5 +1,7 @@
 package com.dedan.mantramsesontengan.ui.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -16,6 +18,7 @@ import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubS
 
 @Composable
 fun MantramNavHost(
+    onDrawerOpenRequest: () -> Unit,
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
@@ -24,8 +27,13 @@ fun MantramNavHost(
         startDestination = MantramSelectBaseDestination.route,
         modifier = modifier
     ) {
-        composable(route = MantramSelectBaseDestination.route) {
+        composable(
+            route = MantramSelectBaseDestination.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
             MantramSelectBaseScreen(
+                onDrawerOpenRequest = onDrawerOpenRequest,
                 onMantramSelect = {
                     navController.navigate("${MantramSelectSubDestination.route}/${it.id}")
                 }
@@ -33,6 +41,8 @@ fun MantramNavHost(
         }
         composable(
             route = MantramSelectSubDestination.routeWithArgs,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
             arguments = listOf(
                 navArgument(
                     name = MantramSelectSubDestination.mantramBaseIdArg,
@@ -41,6 +51,7 @@ fun MantramNavHost(
             )
         ) {
             MantramSelectSubScreen(
+                navigateUp = { navController.navigateUp() },
                 onMantramSubSelect = { mantramSubType, mantramBaseId ->
                     navController.navigate("${MantramDetailDestination.route}/${mantramBaseId}/${mantramSubType.id}")
                 }
@@ -49,6 +60,8 @@ fun MantramNavHost(
 
         composable(
             route = MantramDetailDestination.routeWithArgs,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
             arguments = listOf(
                 navArgument(
                     name = MantramDetailDestination.mantramBaseIdArg,
@@ -60,7 +73,9 @@ fun MantramNavHost(
                 )
             )
         ) {
-            MantramDetailScreen()
+            MantramDetailScreen(
+                navigateUp = { navController.navigateUp() }
+            )
         }
     }
 }

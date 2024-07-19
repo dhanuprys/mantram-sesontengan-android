@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dedan.mantramsesontengan.MantramAppBar
 import com.dedan.mantramsesontengan.R
 import com.dedan.mantramsesontengan.model.MantramBaseType
 import com.dedan.mantramsesontengan.ui.AppViewModelProvider
@@ -35,11 +36,19 @@ object MantramSelectBaseDestination : NavigationDestination {
 
 @Composable
 fun MantramSelectBaseScreen(
+    onDrawerOpenRequest: () -> Unit,
     onMantramSelect: (MantramBaseType) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MantramSelectBaseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    Scaffold(modifier = modifier) { innerPadding ->
+    Scaffold(
+        topBar = {
+            MantramAppBar(
+                onDrawerOpenRequest = onDrawerOpenRequest
+            )
+        },
+        modifier = modifier
+    ) { innerPadding ->
         MantramSelectBaseBody(
             mantramTypesUiState = viewModel.mantramTypesUiState,
             onSelect = onMantramSelect,

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dedan.mantramsesontengan.MantramAppBar
 import com.dedan.mantramsesontengan.R
 import com.dedan.mantramsesontengan.model.MantramDetail
 import com.dedan.mantramsesontengan.ui.AppViewModelProvider
@@ -29,10 +30,19 @@ object MantramDetailDestination : NavigationDestination {
 
 @Composable
 fun MantramDetailScreen(
+    navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MantramDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    Scaffold(modifier = modifier) { innerPadding ->
+    Scaffold(
+        topBar = {
+            MantramAppBar(
+                canNavigateBack = true,
+                onNavigateUp = navigateUp
+            )
+        },
+        modifier = modifier
+    ) { innerPadding ->
         MantramDetailBody(
             mantramDetailUiState = viewModel.mantramDetailUiState,
             modifier = Modifier.padding(innerPadding)

@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dedan.mantramsesontengan.MantramAppBar
 import com.dedan.mantramsesontengan.R
 import com.dedan.mantramsesontengan.model.MantramSubType
 import com.dedan.mantramsesontengan.ui.AppViewModelProvider
@@ -47,10 +48,17 @@ object MantramSelectSubDestination : NavigationDestination {
 @Composable
 fun MantramSelectSubScreen(
     onMantramSubSelect: (MantramSubType, Int) -> Unit,
+    navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MantramSelectSubViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     Scaffold(
+        topBar = {
+            MantramAppBar(
+                canNavigateBack = true,
+                onNavigateUp = navigateUp
+            )
+        },
         modifier = modifier
     ) { innerPadding ->
         MantramSelectSubBody(
