@@ -1,8 +1,10 @@
 package com.dedan.mantramsesontengan.ui.navigation
 
+import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -18,10 +20,13 @@ import com.dedan.mantramsesontengan.ui.screen.mantramselectsub.MantramSelectSubS
 
 @Composable
 fun MantramNavHost(
+    globalViewModel: GlobalViewModel,
     onDrawerOpenRequest: () -> Unit,
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    val audioPlayerUiState = globalViewModel.audioPlayerUiState.collectAsState()
+
     NavHost(
         navController = navController,
         startDestination = MantramSelectBaseDestination.route,
@@ -33,6 +38,7 @@ fun MantramNavHost(
             exitTransition = { ExitTransition.None }
         ) {
             MantramSelectBaseScreen(
+                globalViewModel = globalViewModel,
                 onDrawerOpenRequest = onDrawerOpenRequest,
                 onMantramSelect = {
                     navController.navigate("${MantramSelectSubDestination.route}/${it.id}")
@@ -51,10 +57,11 @@ fun MantramNavHost(
             )
         ) {
             MantramSelectSubScreen(
-                navigateUp = { navController.navigateUp() },
+                globalViewModel = globalViewModel,
                 onMantramSubSelect = { mantramSubType, mantramBaseId ->
                     navController.navigate("${MantramDetailDestination.route}/${mantramBaseId}/${mantramSubType.id}")
-                }
+                },
+                navigateUp = { navController.navigateUp() }
             )
         }
 
@@ -74,6 +81,7 @@ fun MantramNavHost(
             )
         ) {
             MantramDetailScreen(
+                globalViewModel = globalViewModel,
                 navigateUp = { navController.navigateUp() }
             )
         }

@@ -15,17 +15,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dedan.mantramsesontengan.AudioBottomBar
 import com.dedan.mantramsesontengan.MantramAppBar
 import com.dedan.mantramsesontengan.R
 import com.dedan.mantramsesontengan.model.MantramBaseType
 import com.dedan.mantramsesontengan.ui.AppViewModelProvider
 import com.dedan.mantramsesontengan.ui.layout.PageError
 import com.dedan.mantramsesontengan.ui.layout.PageLoading
+import com.dedan.mantramsesontengan.ui.navigation.AudioPlayerUiState
+import com.dedan.mantramsesontengan.ui.navigation.GlobalViewModel
 import com.dedan.mantramsesontengan.ui.navigation.NavigationDestination
 import com.dedan.mantramsesontengan.ui.theme.MantramSesontenganTheme
 
@@ -36,16 +40,29 @@ object MantramSelectBaseDestination : NavigationDestination {
 
 @Composable
 fun MantramSelectBaseScreen(
+    globalViewModel: GlobalViewModel,
     onDrawerOpenRequest: () -> Unit,
     onMantramSelect: (MantramBaseType) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MantramSelectBaseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val audioPlayerUiState = globalViewModel.audioPlayerUiState.collectAsState()
+
     Scaffold(
         topBar = {
             MantramAppBar(
                 onDrawerOpenRequest = onDrawerOpenRequest
             )
+        },
+        bottomBar = {
+            if (audioPlayerUiState.value is AudioPlayerUiState.Playing) {
+                AudioBottomBar(
+                    audioPlayerUiState = audioPlayerUiState.value,
+                    onPlayRequest = {},
+                    onStopRequest = { globalViewModel.stopAudio() },
+                    onRestartRequest = { globalViewModel.restartAudio() }
+                )
+            }
         },
         modifier = modifier
     ) { innerPadding ->

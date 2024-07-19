@@ -7,8 +7,10 @@ import com.dedan.mantramsesontengan.data.repository.MantramRepository
 import com.dedan.mantramsesontengan.data.repository.NetworkMantramRepository
 import com.dedan.mantramsesontengan.data.repository.SavedMantramRepository
 import com.dedan.mantramsesontengan.network.MantramApiService
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class DefaultAppContainer(context: Context) : AppContainer {
     private val baseUrl = "https://mantram.suryamahendra.com/"
@@ -16,7 +18,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
     private val retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
 
