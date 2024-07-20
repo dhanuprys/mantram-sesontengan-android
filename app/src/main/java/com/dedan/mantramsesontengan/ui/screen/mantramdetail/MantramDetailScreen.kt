@@ -24,6 +24,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -43,6 +47,7 @@ import com.dedan.mantramsesontengan.ui.navigation.AudioPlayerUiState
 import com.dedan.mantramsesontengan.ui.navigation.GlobalViewModel
 import com.dedan.mantramsesontengan.ui.navigation.NavigationDestination
 import com.dedan.mantramsesontengan.ui.theme.MantramSesontenganTheme
+import kotlinx.coroutines.launch
 
 object MantramDetailDestination : NavigationDestination {
     override val route = "mantram_detail"
@@ -52,7 +57,8 @@ object MantramDetailDestination : NavigationDestination {
     const val mantramIdArg = "mantramId"
     const val offlineModeArg = "offlineMode"
 
-    val routeWithArgs = "$route/{$mantramBaseIdArg}/{$mantramIdArg}?$offlineModeArg={$offlineModeArg}"
+    val routeWithArgs =
+        "$route/{$mantramBaseIdArg}/{$mantramIdArg}?$offlineModeArg={$offlineModeArg}"
 }
 
 @Composable
@@ -63,6 +69,7 @@ fun MantramDetailScreen(
     viewModel: MantramDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val audioPlayerUiState = globalViewModel.audioPlayerUiState.collectAsState()
+    var bottomLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(viewModel.mantramDetailUiState) {
         if (viewModel.mantramDetailUiState !is MantramDetailUiState.Success) {
@@ -70,6 +77,8 @@ fun MantramDetailScreen(
         }
 
         (viewModel.mantramDetailUiState as MantramDetailUiState.Success).data.apply {
+            bottomLoading = false
+
             if (audioUrl != null) {
                 globalViewModel.prepareAudio(audioUrl)
             }
@@ -112,12 +121,13 @@ fun MantramDetailScreen(
                         ) {
                             Icon(
                                 painter =
-                                    when (viewModel.mantramSavedStatusUiState) {
-                                        is MantramSavedStatusUiState.Saved -> painterResource(id = R.drawable.ic_bookmark)
-                                        is MantramSavedStatusUiState.Unknown,
-                                        is MantramSavedStatusUiState.NotSaved -> painterResource(id = R.drawable.ic_bookmark_border)
-                                        is MantramSavedStatusUiState.NeedUpdate -> painterResource(id = R.drawable.ic_update)
-                                    },
+                                when (viewModel.mantramSavedStatusUiState) {
+                                    is MantramSavedStatusUiState.Saved -> painterResource(id = R.drawable.ic_bookmark)
+                                    is MantramSavedStatusUiState.Unknown,
+                                    is MantramSavedStatusUiState.NotSaved -> painterResource(id = R.drawable.ic_bookmark_border)
+
+                                    is MantramSavedStatusUiState.NeedUpdate -> painterResource(id = R.drawable.ic_update)
+                                },
                                 contentDescription = null
                             )
                         }
@@ -131,12 +141,14 @@ fun MantramDetailScreen(
                 return@Scaffold
             }
 
-            AudioBottomBar(
-                audioPlayerUiState = audioPlayerUiState.value,
-                onPlayRequest = { globalViewModel.playAudio() },
-                onStopRequest = { globalViewModel.stopAudio() },
-                onRestartRequest = { globalViewModel.restartAudio() }
-            )
+            if (!bottomLoading) {
+                AudioBottomBar(
+                    audioPlayerUiState = audioPlayerUiState.value,
+                    onPlayRequest = { globalViewModel.playAudio() },
+                    onStopRequest = { globalViewModel.stopAudio() },
+                    onRestartRequest = { globalViewModel.restartAudio() }
+                )
+            }
         },
         modifier = modifier
     ) { innerPadding ->

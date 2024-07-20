@@ -1,6 +1,7 @@
 package com.dedan.mantramsesontengan
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,6 +37,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -54,6 +56,7 @@ import com.dedan.mantramsesontengan.ui.navigation.MantramNavHost
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseDestination
 import com.dedan.mantramsesontengan.ui.screen.savedmantram.SavedMantramDestination
 import com.dedan.mantramsesontengan.ui.theme.MantramSesontenganTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -127,11 +130,11 @@ fun MantramAppBar(
 
 @Composable
 fun AudioBottomBar(
+    audioPlayerUiState: AudioPlayerUiState,
+    modifier: Modifier = Modifier,
     onPlayRequest: () -> Unit = {},
     onStopRequest: () -> Unit = {},
-    onRestartRequest: () -> Unit = {},
-    audioPlayerUiState: AudioPlayerUiState,
-    modifier: Modifier = Modifier
+    onRestartRequest: () -> Unit = {}
 ) {
     val isAudioReady by remember(audioPlayerUiState) {
         derivedStateOf {
@@ -140,6 +143,18 @@ fun AudioBottomBar(
             }
         }
     }
+
+//    LaunchedEffect(audioPlayerUiState) {
+//        if (audioPlayerUiState is AudioPlayerUiState.Playing) {
+//            Log.d("AudioBottomBar", "It's playing bro")
+//            while (true) {
+//                Log.d("AudioBottomBar", "current progress: ${audioPlayerUiState.audioPlayer.currentPosition}")
+//                delay(1000)
+//            }
+//        } else {
+//            Log.d("AudioBottomBar", "It's not playing bro")
+//        }
+//    }
 
     BottomAppBar(
         containerColor =
@@ -154,9 +169,19 @@ fun AudioBottomBar(
         modifier = modifier
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            if (audioPlayerUiState is AudioPlayerUiState.Loading) {
+            if (
+                audioPlayerUiState is AudioPlayerUiState.Loading
+                || audioPlayerUiState is AudioPlayerUiState.Playing
+                ) {
                 LinearProgressIndicator(
-                    progress = { audioPlayerUiState.progress.toFloat() / 100 },
+                    progress = {
+                        if (audioPlayerUiState is AudioPlayerUiState.Loading)
+                            audioPlayerUiState.progress
+                        else if (audioPlayerUiState is AudioPlayerUiState.Playing)
+                            audioPlayerUiState.progress
+                        else
+                            0f
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -281,7 +306,7 @@ fun MantramAppBarPreview() {
                         Text("Mantram Sesontengan")
                     }
                 },
-                bottomBar = { AudioBottomBar(audioPlayerUiState = AudioPlayerUiState.Playing) }
+                bottomBar = { AudioBottomBar(audioPlayerUiState = AudioPlayerUiState.Paused) }
             ) {}
         }
     }
