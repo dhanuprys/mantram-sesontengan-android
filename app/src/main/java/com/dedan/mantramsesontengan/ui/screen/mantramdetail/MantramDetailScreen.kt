@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,6 +69,7 @@ fun MantramDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: MantramDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val audioPlayerUiState = globalViewModel.audioPlayerUiState.collectAsState()
     var bottomLoading by remember { mutableStateOf(true) }
 
@@ -101,8 +103,11 @@ fun MantramDetailScreen(
                     if (viewModel.offlineMode) {
                         Button(
                             onClick = {
-                                viewModel.removeFromBookmark()
-                                navigateUp()
+                                coroutineScope.launch {
+                                    viewModel.removeFromBookmark()
+                                    globalViewModel.showToast("Mantram berhasil dihapus")
+                                    navigateUp()
+                                }
                             }
                         ) {
                             Text("Hapus")
@@ -112,10 +117,16 @@ fun MantramDetailScreen(
                             viewModel.mantramSavedStatusUiState is MantramSavedStatusUiState.Saved
                         IconButton(
                             onClick = {
-                                if (isMantramSaved) {
-                                    viewModel.removeFromBookmark()
-                                } else {
-                                    viewModel.storeInBookmark()
+                                coroutineScope.launch {
+                                    if (isMantramSaved) {
+                                        viewModel.removeFromBookmark()
+                                    } else {
+                                        viewModel.storeInBookmark()
+                                    }
+
+                                    globalViewModel.showToast(
+                                        if (isMantramSaved) "Mantram berhasil dihapus" else "Mantram berhasil disimpan"
+                                    )
                                 }
                             }
                         ) {

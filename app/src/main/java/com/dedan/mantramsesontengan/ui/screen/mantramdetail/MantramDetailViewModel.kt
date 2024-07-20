@@ -31,7 +31,7 @@ class MantramDetailViewModel(
     var mantramDetailUiState: MantramDetailUiState by mutableStateOf(MantramDetailUiState.Loading)
         private set
     var mantramSavedStatusUiState: MantramSavedStatusUiState by
-        mutableStateOf(MantramSavedStatusUiState.Unknown)
+    mutableStateOf(MantramSavedStatusUiState.Unknown)
         private set
 
     init {
@@ -41,25 +41,19 @@ class MantramDetailViewModel(
             getMantramDetail()
     }
 
-    fun storeInBookmark(savedMantram: SavedMantram? = null) {
-        viewModelScope.launch {
-            val newMantram = savedMantram ?: mantramDetailUiState.let {
-                if (it !is MantramDetailUiState.Success) return@launch
-                (it as MantramDetailUiState.Success).data.toSavedMantram(mantramBaseId)
-            }
-
-            Log.d("MantramDetailViewModel", "Storing in database")
-            savedMantramRepository.saveMantram(newMantram)
-            Log.d("MantramDetail", "Successfully store")
-            mantramSavedStatusUiState = MantramSavedStatusUiState.Saved
+    suspend fun storeInBookmark(savedMantram: SavedMantram? = null) {
+        val newMantram = savedMantram ?: mantramDetailUiState.let {
+            if (it !is MantramDetailUiState.Success) return
+            (it as MantramDetailUiState.Success).data.toSavedMantram(mantramBaseId)
         }
+
+        savedMantramRepository.saveMantram(newMantram)
+        mantramSavedStatusUiState = MantramSavedStatusUiState.Saved
     }
 
-    fun removeFromBookmark() {
-        viewModelScope.launch {
-            savedMantramRepository.deleteMantramById(mantramId)
-            mantramSavedStatusUiState = MantramSavedStatusUiState.NotSaved
-        }
+    suspend fun removeFromBookmark() {
+        savedMantramRepository.deleteMantramById(mantramId)
+        mantramSavedStatusUiState = MantramSavedStatusUiState.NotSaved
     }
 
     fun getMantramDetail() {
