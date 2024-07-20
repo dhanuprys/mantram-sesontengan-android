@@ -3,14 +3,18 @@ package com.dedan.mantramsesontengan.ui.screen.mantramdetail
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,7 +49,9 @@ object MantramDetailDestination : NavigationDestination {
 
     const val mantramBaseIdArg = "mantramBaseId"
     const val mantramIdArg = "mantramId"
-    val routeWithArgs = "$route/{$mantramBaseIdArg}/{$mantramIdArg}"
+    const val offlineModeArg = "offlineMode"
+
+    val routeWithArgs = "$route/{$mantramBaseIdArg}/{$mantramIdArg}?$offlineModeArg={$offlineModeArg}"
 }
 
 @Composable
@@ -81,7 +88,16 @@ fun MantramDetailScreen(
                         Text("Detail Mantram")
                     }
 
-                    if (viewModel.mantramSavedStatusUiState !is MantramSavedStatusUiState.Unknown) {
+                    if (viewModel.offlineMode) {
+                        Button(
+                            onClick = {
+                                viewModel.removeFromBookmark()
+                                navigateUp()
+                            }
+                        ) {
+                            Text("Hapus")
+                        }
+                    } else if (viewModel.mantramSavedStatusUiState !is MantramSavedStatusUiState.Unknown) {
                         val isMantramSaved =
                             viewModel.mantramSavedStatusUiState is MantramSavedStatusUiState.Saved
                         IconButton(
@@ -95,10 +111,12 @@ fun MantramDetailScreen(
                         ) {
                             Icon(
                                 painter =
-                                if (isMantramSaved)
-                                    painterResource(id = R.drawable.ic_bookmark)
-                                else
-                                    painterResource(id = R.drawable.ic_bookmark_border),
+                                    when (viewModel.mantramSavedStatusUiState) {
+                                        is MantramSavedStatusUiState.Saved -> painterResource(id = R.drawable.ic_bookmark)
+                                        is MantramSavedStatusUiState.Unknown,
+                                        is MantramSavedStatusUiState.NotSaved -> painterResource(id = R.drawable.ic_bookmark_border)
+                                        is MantramSavedStatusUiState.NeedUpdate -> painterResource(id = R.drawable.ic_update)
+                                    },
                                 contentDescription = null
                             )
                         }
@@ -107,6 +125,11 @@ fun MantramDetailScreen(
             }
         },
         bottomBar = {
+            if (viewModel.offlineMode) {
+                OfflineBottomBar()
+                return@Scaffold
+            }
+
             AudioBottomBar(
                 audioPlayerUiState = audioPlayerUiState.value,
                 onPlayRequest = { globalViewModel.playAudio() },
@@ -219,5 +242,28 @@ fun MantramDescription(
 fun MantramDescriptionPreview() {
     MantramSesontenganTheme {
         MantramDescription("Text")
+    }
+}
+
+@Composable
+fun OfflineBottomBar(modifier: Modifier = Modifier) {
+    BottomAppBar(
+        containerColor = MaterialTheme.colorScheme.secondaryContainer
+    ) {
+        Text(
+            text = "Mode offline",
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun OfflineBottomBarPreview() {
+    MantramSesontenganTheme {
+        Scaffold(
+            bottomBar = { OfflineBottomBar() }
+        ) { innerPadding -> innerPadding }
     }
 }

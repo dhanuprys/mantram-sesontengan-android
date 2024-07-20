@@ -10,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.dedan.mantramsesontengan.data.repository.MantramRepository
 import com.dedan.mantramsesontengan.data.repository.SavedMantramRepository
 import com.dedan.mantramsesontengan.model.MantramDetail
+import com.dedan.mantramsesontengan.model.SavedMantram
+import com.dedan.mantramsesontengan.model.toMantramDetail
 import com.dedan.mantramsesontengan.model.toSavedMantram
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -23,28 +25,33 @@ class MantramDetailViewModel(
         checkNotNull(savedStateHandle[MantramDetailDestination.mantramBaseIdArg])
     private val mantramId: Int =
         checkNotNull(savedStateHandle[MantramDetailDestination.mantramIdArg])
+    val offlineMode: Boolean =
+        savedStateHandle[MantramDetailDestination.offlineModeArg]!!
 
     var mantramDetailUiState: MantramDetailUiState by mutableStateOf(MantramDetailUiState.Loading)
         private set
-    var mantramSavedStatusUiState: MantramSavedStatusUiState by mutableStateOf(
-        MantramSavedStatusUiState.Unknown
-    )
+    var mantramSavedStatusUiState: MantramSavedStatusUiState by
+        mutableStateOf(MantramSavedStatusUiState.Unknown)
         private set
 
     init {
-        getMantramDetail()
+        if (offlineMode)
+            getMantramDetailFromDatabase()
+        else
+            getMantramDetail()
     }
 
-    fun storeInBookmark() {
+    fun storeInBookmark(savedMantram: SavedMantram? = null) {
         viewModelScope.launch {
-            if (mantramDetailUiState is MantramDetailUiState.Success) {
-                Log.d("MantramDetail", "Storing in database")
-                savedMantramRepository.saveMantram(
-                    (mantramDetailUiState as MantramDetailUiState.Success).data.toSavedMantram()
-                )
-                Log.d("MantramDetail", "Successfully store")
-                mantramSavedStatusUiState = MantramSavedStatusUiState.Saved
+            val newMantram = savedMantram ?: mantramDetailUiState.let {
+                if (it !is MantramDetailUiState.Success) return@launch
+                (it as MantramDetailUiState.Success).data.toSavedMantram(mantramBaseId)
             }
+
+            Log.d("MantramDetailViewModel", "Storing in database")
+            savedMantramRepository.saveMantram(newMantram)
+            Log.d("MantramDetail", "Successfully store")
+            mantramSavedStatusUiState = MantramSavedStatusUiState.Saved
         }
     }
 
@@ -69,13 +76,37 @@ class MantramDetailViewModel(
                             return@also
                         }
 
-                        mantramSavedStatusUiState = if (it.version != mantramDetail.version)
-                            MantramSavedStatusUiState.NeedUpdate
-                        else
-                            MantramSavedStatusUiState.Saved
+                        if (it.version != mantramDetail.version) {
+                            Log.d("MantramDetailViewModel", "Version mismatch")
+                            mantramSavedStatusUiState = MantramSavedStatusUiState.NeedUpdate
+                            // TODO: need refactor
+                            storeInBookmark(
+                                mantramDetail.toSavedMantram(mantramBaseId)
+                            )
+                        } else {
+                            mantramSavedStatusUiState = MantramSavedStatusUiState.Saved
+                        }
                     }
 
                 MantramDetailUiState.Success(mantramDetail)
+            } catch (e: Exception) {
+                Log.e("MantramDetailViewModel", "Error fetching mantram detail", e)
+                MantramDetailUiState.Error
+            }
+        }
+    }
+
+    fun getMantramDetailFromDatabase() {
+        viewModelScope.launch {
+            mantramDetailUiState = MantramDetailUiState.Loading
+            mantramDetailUiState = try {
+                val mantramDetail = savedMantramRepository.getMantramStream(mantramId).firstOrNull()
+
+                if (mantramDetail == null) {
+                    MantramDetailUiState.Error
+                } else {
+                    MantramDetailUiState.Success(mantramDetail.toMantramDetail())
+                }
             } catch (e: Exception) {
                 Log.e("MantramDetailViewModel", "Error fetching mantram detail", e)
                 MantramDetailUiState.Error

@@ -48,7 +48,7 @@ object SavedMantramDestination : NavigationDestination {
 @Composable
 fun SavedMantramScreen(
     globalViewModel: GlobalViewModel,
-    navigateToSavedMantramDetail: (Int) -> Unit,
+    navigateToSavedMantramDetail: (Int, Int) -> Unit,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SavedMantramViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -68,7 +68,7 @@ fun SavedMantramScreen(
     ) { innerPadding ->
         SavedMantramBody(
             savedMantramUiState = savedMantramUiState,
-            onMantramSelect = { navigateToSavedMantramDetail(it.id) },
+            onMantramSelect = { navigateToSavedMantramDetail(it.baseId, it.id) },
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -94,8 +94,8 @@ fun MantramSelectSubBody_Success() {
         SavedMantramBody(
             savedMantramUiState = SavedMantramUiState(
                 listOf(
-                    SavedMantram(1, "Test", "Test", "Test", version = 1),
-                    SavedMantram(2, "Test2", "Test2", "Test2", version = 1)
+                    SavedMantram(1, 1, "Test", "Test", "Test", version = 1),
+                    SavedMantram(2, 1, "Test2", "Test2", "Test2", version = 1)
                 )
             ),
             onMantramSelect = {}
@@ -133,9 +133,9 @@ fun SavedMantramListPreview() {
     MantramSesontenganTheme {
         SavedMantramList(
             savedMantrams = listOf(
-                SavedMantram(1, "Test", "Test", "Test", version = 1),
-                SavedMantram(2, "Test2", "Test2", "Test2", version = 1),
-                SavedMantram(3, "Test3", "Test3", "Test3", version = 1)
+                SavedMantram(1, 1, "Test", "Test", "Test", version = 1),
+                SavedMantram(2, 1, "Test2", "Test2", "Test2", version = 1),
+                SavedMantram(3, 1, "Test3", "Test3", "Test3", version = 1)
             ),
             onSelect = {},
             modifier = Modifier.width(400.dp)
@@ -208,7 +208,7 @@ fun SavedMantramCardPreview() {
 
     MantramSesontenganTheme {
         SavedMantramCard(
-            mantram = SavedMantram(1, "Test", "Test", "Test", version = 1),
+            mantram = SavedMantram(1, 1, "Test", "Test", "Test", version = 1),
             onExpandRequest = { isExpand = !isExpand },
             expand = isExpand,
             onClick = {},

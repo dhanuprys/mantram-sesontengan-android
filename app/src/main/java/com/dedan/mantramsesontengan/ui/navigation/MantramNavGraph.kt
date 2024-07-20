@@ -80,6 +80,13 @@ fun MantramNavHost(
                 navArgument(
                     name = MantramDetailDestination.mantramIdArg,
                     builder = { type = NavType.IntType }
+                ),
+                navArgument(
+                    name = MantramDetailDestination.offlineModeArg,
+                    builder = {
+                        type = NavType.BoolType
+                        defaultValue = false
+                    }
                 )
             )
         ) {
@@ -96,7 +103,11 @@ fun MantramNavHost(
         ) {
             SavedMantramScreen(
                 globalViewModel = globalViewModel,
-                navigateToSavedMantramDetail = {},
+                navigateToSavedMantramDetail = { baseId, mantramId ->
+                    val navigationArgument =
+                        "${MantramDetailDestination.route}/${baseId}/${mantramId}?${MantramDetailDestination.offlineModeArg}=true"
+                    navController.navigate(navigationArgument)
+                },
                 navigateUp = { navController.navigateUp() }
             )
         }

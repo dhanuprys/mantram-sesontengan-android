@@ -16,6 +16,6 @@ data class MantramDetail(
     val updatedAt: String
 )
 
-fun MantramDetail.toSavedMantram(): SavedMantram {
-    return SavedMantram(id, name, mantram, description, version ?: 0)
+fun MantramDetail.toSavedMantram(baseId: Int): SavedMantram {
+    return SavedMantram(id, baseId, name, mantram, description, version ?: 0)
 }
