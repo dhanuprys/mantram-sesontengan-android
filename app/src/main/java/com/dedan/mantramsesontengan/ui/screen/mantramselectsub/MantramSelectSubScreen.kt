@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -100,8 +101,8 @@ fun MantramSelectSubBody(
     modifier: Modifier = Modifier
 ) {
     when (mantramSubTypesUiState) {
-        is MantramSubTypesUiState.Error -> PageError(modifier = modifier)
-        is MantramSubTypesUiState.Loading -> PageLoading(modifier = modifier)
+        is MantramSubTypesUiState.Error -> PageError(modifier = modifier.fillMaxSize())
+        is MantramSubTypesUiState.Loading -> PageLoading(modifier = modifier.fillMaxSize())
         is MantramSubTypesUiState.Success -> MantramSubTypesList(
             mantramSubTypes = mantramSubTypesUiState.data,
             onSelect = onMantramSubSelect,

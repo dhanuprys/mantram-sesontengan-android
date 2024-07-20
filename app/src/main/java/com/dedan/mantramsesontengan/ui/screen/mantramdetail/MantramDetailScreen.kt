@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -152,8 +153,8 @@ fun MantramDetailBody(
     modifier: Modifier = Modifier
 ) {
     when (mantramDetailUiState) {
-        is MantramDetailUiState.Error -> PageError(modifier = modifier)
-        is MantramDetailUiState.Loading -> PageLoading(modifier = modifier)
+        is MantramDetailUiState.Error -> PageError(modifier = modifier.fillMaxSize())
+        is MantramDetailUiState.Loading -> PageLoading(modifier = modifier.fillMaxSize())
         is MantramDetailUiState.Success -> MantramWrapper(
             mantramDetail = mantramDetailUiState.data,
             modifier = modifier.padding(16.dp)

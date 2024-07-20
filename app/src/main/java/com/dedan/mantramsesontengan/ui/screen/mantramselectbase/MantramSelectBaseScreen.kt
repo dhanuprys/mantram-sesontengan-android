@@ -3,6 +3,7 @@ package com.dedan.mantramsesontengan.ui.screen.mantramselectbase
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -104,8 +105,8 @@ fun MantramSelectBaseBody(
     modifier: Modifier = Modifier
 ) {
     when (mantramTypesUiState) {
-        is MantramTypesUiState.Error -> PageError(modifier = modifier)
-        is MantramTypesUiState.Loading -> PageLoading(modifier = modifier)
+        is MantramTypesUiState.Error -> PageError(modifier = modifier.fillMaxSize())
+        is MantramTypesUiState.Loading -> PageLoading(modifier = modifier.fillMaxSize())
         is MantramTypesUiState.Success -> MantramTypesList(
             mantramTypes = mantramTypesUiState.data,
             onSelect = onSelect,
