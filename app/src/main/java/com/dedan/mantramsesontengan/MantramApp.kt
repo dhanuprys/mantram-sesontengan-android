@@ -135,6 +135,14 @@ fun AudioBottomBar(
     }
 
     BottomAppBar(
+        containerColor =
+            when (audioPlayerUiState) {
+                is AudioPlayerUiState.Loading -> MaterialTheme.colorScheme.surfaceVariant
+                is AudioPlayerUiState.Paused -> MaterialTheme.colorScheme.inversePrimary
+                is AudioPlayerUiState.Blank -> MaterialTheme.colorScheme.surfaceVariant
+                is AudioPlayerUiState.Playing -> MaterialTheme.colorScheme.primaryContainer
+                is AudioPlayerUiState.Error -> MaterialTheme.colorScheme.surfaceVariant
+            },
         contentPadding = PaddingValues(0.dp),
         modifier = modifier
     ) {
