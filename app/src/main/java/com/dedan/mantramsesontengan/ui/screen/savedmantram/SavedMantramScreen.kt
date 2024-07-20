@@ -32,10 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dedan.mantramsesontengan.AudioBottomBar
 import com.dedan.mantramsesontengan.MantramAppBar
 import com.dedan.mantramsesontengan.R
 import com.dedan.mantramsesontengan.model.SavedMantram
 import com.dedan.mantramsesontengan.ui.AppViewModelProvider
+import com.dedan.mantramsesontengan.ui.navigation.AudioPlayerUiState
 import com.dedan.mantramsesontengan.ui.navigation.GlobalViewModel
 import com.dedan.mantramsesontengan.ui.navigation.NavigationDestination
 import com.dedan.mantramsesontengan.ui.theme.MantramSesontenganTheme
@@ -53,7 +55,8 @@ fun SavedMantramScreen(
     modifier: Modifier = Modifier,
     viewModel: SavedMantramViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val savedMantramUiState by viewModel.savedMantramUiState.collectAsState()
+    val savedMantramUiState = viewModel.savedMantramUiState.collectAsState()
+    val audioPlayerUiState = globalViewModel.audioPlayerUiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -64,10 +67,20 @@ fun SavedMantramScreen(
                 Text("Mantram Tersimpan")
             }
         },
+        bottomBar = {
+            if (audioPlayerUiState.value is AudioPlayerUiState.Playing) {
+                AudioBottomBar(
+                    audioPlayerUiState = audioPlayerUiState.value,
+                    onPlayRequest = {},
+                    onStopRequest = { globalViewModel.stopAudio() },
+                    onRestartRequest = { globalViewModel.restartAudio() }
+                )
+            }
+        },
         modifier = modifier
     ) { innerPadding ->
         SavedMantramBody(
-            savedMantramUiState = savedMantramUiState,
+            savedMantramUiState = savedMantramUiState.value,
             onMantramSelect = { navigateToSavedMantramDetail(it.baseId, it.id) },
             modifier = Modifier.padding(innerPadding)
         )

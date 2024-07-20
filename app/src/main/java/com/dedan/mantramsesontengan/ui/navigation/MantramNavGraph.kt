@@ -106,6 +106,8 @@ fun MantramNavHost(
                 navigateToSavedMantramDetail = { baseId, mantramId ->
                     val navigationArgument =
                         "${MantramDetailDestination.route}/${baseId}/${mantramId}?${MantramDetailDestination.offlineModeArg}=true"
+
+                    globalViewModel.clearAudio()
                     navController.navigate(navigationArgument)
                 },
                 navigateUp = { navController.navigateUp() }
