@@ -17,11 +17,18 @@ class GlobalViewModel : ViewModel() {
     private val _audioPlayerUiState = MutableStateFlow<AudioPlayerUiState>(AudioPlayerUiState.Blank)
     val audioPlayerUiState = _audioPlayerUiState.asStateFlow()
 
+    private val _toastMessage = MutableStateFlow<String?>(null)
+    val toastMessage = _toastMessage.asStateFlow()
+
     private var _audioPlayer: MediaPlayer? = null
     private var previousAudioUrl: String? = null
 
     private val audioScopeJob = SupervisorJob()
     private val audioScope = CoroutineScope(Dispatchers.Main + audioScopeJob)
+
+    fun showToast(message: String?) {
+        _toastMessage.value = message
+    }
 
     fun prepareAudio(audioUrl: String, force: Boolean = false) {
         viewModelScope.launch {
