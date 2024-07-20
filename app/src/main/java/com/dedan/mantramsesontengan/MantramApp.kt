@@ -75,7 +75,7 @@ fun MantramApp(
 
     LaunchedEffect(toastMessage) {
         toastMessage?.let {
-            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             globalViewModel.showToast(null)
         }
     }

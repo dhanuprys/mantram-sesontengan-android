@@ -1,5 +1,7 @@
 package com.dedan.mantramsesontengan.ui.screen.mantramdetail
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -31,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -69,6 +73,7 @@ fun MantramDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: MantramDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val audioPlayerUiState = globalViewModel.audioPlayerUiState.collectAsState()
     var bottomLoading by remember { mutableStateOf(true) }
@@ -141,6 +146,16 @@ fun MantramDetailScreen(
                                 },
                                 contentDescription = null
                             )
+                        }
+
+                        IconButton(onClick = {
+                            shareOrder(
+                                context,
+                                (viewModel.mantramDetailUiState as MantramDetailUiState.Success).data.name,
+                                (viewModel.mantramDetailUiState as MantramDetailUiState.Success).data.mantram
+                            )
+                        }) {
+                            Icon(imageVector = Icons.Filled.Share, contentDescription = null)
                         }
                     }
                 }
@@ -290,4 +305,20 @@ fun OfflineBottomBarPreview() {
             bottomBar = { OfflineBottomBar() }
         ) { innerPadding -> innerPadding }
     }
+}
+
+private fun shareOrder(context: Context, subject: String, summary: String) {
+    val formattedMessage = subject + "\n" + summary
+    // Create an ACTION_SEND implicit intent with order details in the intent extras
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+//        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, formattedMessage)
+    }
+    context.startActivity(
+        Intent.createChooser(
+            intent,
+            "Share using"
+        )
+    )
 }
