@@ -56,6 +56,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dedan.mantramsesontengan.ui.navigation.AudioPlayerUiState
 import com.dedan.mantramsesontengan.ui.navigation.GlobalViewModel
 import com.dedan.mantramsesontengan.ui.navigation.MantramNavHost
+import com.dedan.mantramsesontengan.ui.screen.info.InfoDestination
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseDestination
 import com.dedan.mantramsesontengan.ui.screen.savedmantram.SavedMantramDestination
 import com.dedan.mantramsesontengan.ui.theme.MantramSesontenganTheme
@@ -297,7 +298,7 @@ fun MantramAppDrawer(
                 Text("Info Aplikasi")
             },
             selected = false,
-            onClick = { redirectTo(SavedMantramDestination.route, true) },
+            onClick = { redirectTo(InfoDestination.route, true) },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
     }

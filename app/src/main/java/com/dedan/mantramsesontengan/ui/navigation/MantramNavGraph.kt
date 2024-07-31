@@ -11,6 +11,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.dedan.mantramsesontengan.ui.screen.info.InfoDestination
+import com.dedan.mantramsesontengan.ui.screen.info.InfoScreen
 import com.dedan.mantramsesontengan.ui.screen.mantramdetail.MantramDetailDestination
 import com.dedan.mantramsesontengan.ui.screen.mantramdetail.MantramDetailScreen
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseDestination
@@ -110,6 +112,16 @@ fun MantramNavHost(
                     globalViewModel.clearAudio()
                     navController.navigate(navigationArgument)
                 },
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+
+        composable(
+            route = InfoDestination.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
+            InfoScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
