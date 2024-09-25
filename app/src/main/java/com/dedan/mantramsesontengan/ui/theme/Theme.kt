@@ -3,13 +3,16 @@ package com.dedan.mantramsesontengan.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -35,6 +38,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun MantramSesontenganTheme(
+    typographySize: TypographySize = TypographySize.NORMAL,
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -52,7 +56,40 @@ fun MantramSesontenganTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = Typography(typographySize),
         content = content
     )
+}
+
+@Preview
+@Composable
+fun MantramSesontenganThemePreview_Small() {
+    MantramSesontenganTheme(typographySize = TypographySize.SMALL) {
+        Column {
+            Text("Hello brok @title", style = MaterialTheme.typography.displaySmall)
+            Text("Hello brok", style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MantramSesontenganThemePreview_Medium() {
+    MantramSesontenganTheme {
+        Column {
+            Text("Hello brok @title", style = MaterialTheme.typography.displaySmall)
+            Text("Hello brok", style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MantramSesontenganThemePreview_Large() {
+    MantramSesontenganTheme(typographySize = TypographySize.LARGE) {
+        Column {
+            Text("Hello brok @title", style = MaterialTheme.typography.displaySmall)
+            Text("Hello brok", style = MaterialTheme.typography.bodyMedium)
+        }
+    }
 }
