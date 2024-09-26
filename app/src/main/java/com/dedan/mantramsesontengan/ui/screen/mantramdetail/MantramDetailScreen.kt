@@ -3,6 +3,7 @@ package com.dedan.mantramsesontengan.ui.screen.mantramdetail
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,12 +37,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dedan.mantramsesontengan.AudioBottomBar
 import com.dedan.mantramsesontengan.MantramAppBar
@@ -52,6 +58,7 @@ import com.dedan.mantramsesontengan.ui.navigation.AudioPlayerUiState
 import com.dedan.mantramsesontengan.ui.navigation.GlobalViewModel
 import com.dedan.mantramsesontengan.ui.navigation.NavigationDestination
 import com.dedan.mantramsesontengan.ui.theme.MantramSesontenganTheme
+import com.dedan.mantramsesontengan.ui.theme.TypographySize
 import kotlinx.coroutines.launch
 
 object MantramDetailDestination : NavigationDestination {
@@ -76,6 +83,7 @@ fun MantramDetailScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val audioPlayerUiState = globalViewModel.audioPlayerUiState.collectAsState()
+    val typographySize by globalViewModel.typographySize.collectAsState()
     var bottomLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(viewModel.mantramDetailUiState) {
@@ -178,10 +186,92 @@ fun MantramDetailScreen(
         },
         modifier = modifier
     ) { innerPadding ->
-        MantramDetailBody(
-            mantramDetailUiState = viewModel.mantramDetailUiState,
-            modifier = Modifier.padding(innerPadding)
-        )
+        Column(modifier = Modifier.padding(innerPadding)) {
+            FontSizeSelector(
+                currentFontSize = typographySize,
+                onFontChange = {
+                    coroutineScope.launch {
+                        globalViewModel.changeTypography(it)
+                    }
+                },
+                modifier = Modifier.padding(16.dp)
+            )
+            MantramDetailBody(
+                mantramDetailUiState = viewModel.mantramDetailUiState
+            )
+        }
+    }
+}
+
+@Composable
+fun FontSizeItem(
+    onClick: () -> Unit,
+    fontSize: TextUnit,
+    selected: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor =
+                if (selected) Color.Unspecified
+                else Color.Transparent,
+            contentColor =
+                if (selected) Color.Unspecified
+                else MaterialTheme.colorScheme.primary
+        ),
+        contentPadding = PaddingValues(2.dp),
+        modifier = modifier
+    ) {
+        Text("A", fontSize = fontSize)
+    }
+}
+
+@Composable
+fun FontSizeSelector(
+    currentFontSize: TypographySize = TypographySize.NORMAL,
+    onFontChange: (TypographySize) -> Unit = {},
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text("Ukuran font")
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(3.dp)
+        ) {
+            FontSizeItem(
+                onClick = {
+                    onFontChange(TypographySize.SMALL)
+                },
+                selected = currentFontSize == TypographySize.SMALL,
+                fontSize = 12.sp,
+            )
+            FontSizeItem(
+                onClick = {
+                    onFontChange(TypographySize.NORMAL)
+                },
+                selected = currentFontSize == TypographySize.NORMAL,
+                fontSize = 16.sp
+            )
+            FontSizeItem(
+                onClick = {
+                    onFontChange(TypographySize.LARGE)
+                },
+                selected = currentFontSize == TypographySize.LARGE,
+                fontSize = 20.sp
+            )
+        }
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun FontSizeSelectorPreview() {
+    MantramSesontenganTheme {
+        FontSizeSelector()
     }
 }
 
@@ -204,19 +294,22 @@ fun MantramDetailBody(
 @Composable
 fun MantramDetailBodyPreview_Success() {
     MantramSesontenganTheme {
-        MantramDetailBody(
-            mantramDetailUiState = MantramDetailUiState.Success(
-                MantramDetail(
-                    id = 1,
-                    name = "Test",
-                    mantram = "Test",
-                    description = "Test",
-                    audioUrl = "Test",
-                    version = 0,
-                    updatedAt = "Test"
+        Column {
+            FontSizeSelector()
+            MantramDetailBody(
+                mantramDetailUiState = MantramDetailUiState.Success(
+                    MantramDetail(
+                        id = 1,
+                        name = "Test",
+                        mantram = "Test",
+                        description = "Test",
+                        audioUrl = "Test",
+                        version = 0,
+                        updatedAt = "Test"
+                    )
                 )
             )
-        )
+        }
     }
 }
 
@@ -225,7 +318,9 @@ fun MantramWrapper(
     mantramDetail: MantramDetail,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .verticalScroll(rememberScrollState())) {
         Column(modifier = modifier) {
             MantramContent(
                 text = mantramDetail.mantram,

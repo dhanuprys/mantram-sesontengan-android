@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dedan.mantramsesontengan.ui.navigation.GlobalViewModel
 import com.dedan.mantramsesontengan.ui.theme.MantramSesontenganTheme
@@ -16,8 +18,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             globalViewModel = viewModel()
+            val typographySize by globalViewModel.typographySize.collectAsState()
 
-            MantramSesontenganTheme {
+            MantramSesontenganTheme(typographySize = typographySize) {
                 MantramApp(globalViewModel = globalViewModel)
             }
         }

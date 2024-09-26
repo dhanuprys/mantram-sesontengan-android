@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dedan.mantramsesontengan.ui.theme.TypographySize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -19,6 +20,9 @@ class GlobalViewModel : ViewModel() {
 
     private val _toastMessage = MutableStateFlow<String?>(null)
     val toastMessage = _toastMessage.asStateFlow()
+
+    private val _typographySize = MutableStateFlow<TypographySize>(TypographySize.NORMAL)
+    val typographySize = _typographySize.asStateFlow()
 
     private var _audioPlayer: MediaPlayer? = null
     private var previousAudioUrl: String? = null
@@ -120,6 +124,12 @@ class GlobalViewModel : ViewModel() {
             }
 
             _audioPlayer = null
+        }
+    }
+
+    fun changeTypography(typographySize: TypographySize) {
+        viewModelScope.launch {
+            _typographySize.value = typographySize
         }
     }
 }

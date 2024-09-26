@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -50,7 +52,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dedan.mantramsesontengan.ui.navigation.AudioPlayerUiState
@@ -60,6 +64,7 @@ import com.dedan.mantramsesontengan.ui.screen.info.InfoDestination
 import com.dedan.mantramsesontengan.ui.screen.mantramselectbase.MantramSelectBaseDestination
 import com.dedan.mantramsesontengan.ui.screen.savedmantram.SavedMantramDestination
 import com.dedan.mantramsesontengan.ui.theme.MantramSesontenganTheme
+import com.dedan.mantramsesontengan.ui.theme.TypographySize
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -68,6 +73,7 @@ fun MantramApp(
     globalViewModel: GlobalViewModel,
     navController: NavHostController = rememberNavController()
 ) {
+    val typographySize by globalViewModel.typographySize.collectAsState()
     val context = LocalContext.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
@@ -86,15 +92,18 @@ fun MantramApp(
         gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             MantramAppDrawer(
+                currentFontSize = typographySize,
+                changeFontSize = { globalViewModel.changeTypography(it) },
                 redirectTo = { route, autoClose ->
                     navController.navigate(route)
 
-                    if (autoClose == true) {
+                    if (autoClose) {
                         coroutineScope.launch {
                             drawerState.close()
                         }
                     }
                 },
+                requestClose = { coroutineScope.launch { drawerState.close() } }
             )
         }
     ) {
@@ -263,10 +272,35 @@ fun AudioBottomBar(
 }
 
 @Composable
-fun MantramAppDrawer(
-    redirectTo: (String, Boolean) -> Unit,
+fun FontSelectorItem(
+    selected: Boolean,
+    fontSize: TextUnit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    NavigationDrawerItem(
+        icon = {
+            Text("A", fontSize = fontSize)
+        },
+        label = {
+            Text("Besar", fontSize = fontSize)
+        },
+        selected = selected,
+        onClick = onClick,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun MantramAppDrawer(
+    redirectTo: (String, Boolean) -> Unit,
+    currentFontSize: TypographySize,
+    changeFontSize: (TypographySize) -> Unit,
+    requestClose: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
+    val itemPadding = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+
     ModalDrawerSheet(modifier = modifier) {
         NavigationDrawerItem(
             icon = {
@@ -277,7 +311,7 @@ fun MantramAppDrawer(
             },
             selected = true,
             onClick = { redirectTo(MantramSelectBaseDestination.route, true) },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+            modifier = itemPadding
         )
         NavigationDrawerItem(
             icon = {
@@ -288,7 +322,7 @@ fun MantramAppDrawer(
             },
             selected = false,
             onClick = { redirectTo(SavedMantramDestination.route, true) },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+            modifier = itemPadding
         )
         NavigationDrawerItem(
             icon = {
@@ -299,7 +333,40 @@ fun MantramAppDrawer(
             },
             selected = false,
             onClick = { redirectTo(InfoDestination.route, true) },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+            modifier = itemPadding
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "Ukuran font",
+            modifier = itemPadding
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        FontSelectorItem(
+            selected = currentFontSize == TypographySize.SMALL,
+            fontSize = 14.sp,
+            onClick = {
+                changeFontSize(TypographySize.SMALL)
+                requestClose()
+            },
+            modifier = itemPadding
+        )
+        FontSelectorItem(
+            selected = currentFontSize == TypographySize.NORMAL,
+            fontSize = 16.sp,
+            onClick = {
+                changeFontSize(TypographySize.NORMAL)
+                requestClose()
+            },
+            modifier = itemPadding
+        )
+        FontSelectorItem(
+            selected = currentFontSize == TypographySize.LARGE,
+            fontSize = 20.sp,
+            onClick = {
+                changeFontSize(TypographySize.LARGE)
+                requestClose()
+            },
+            modifier = itemPadding
         )
     }
 }
@@ -308,11 +375,17 @@ fun MantramAppDrawer(
 @Preview(showSystemUi = true)
 @Composable
 fun MantramAppBarPreview() {
+    val drawerState = DrawerState(DrawerValue.Open)
     MantramSesontenganTheme {
         ModalNavigationDrawer(
             drawerContent = {
-                MantramAppDrawer(redirectTo = { _, _ -> })
-            }
+                MantramAppDrawer(
+                    redirectTo = { _, _ -> },
+                    currentFontSize = TypographySize.LARGE,
+                    changeFontSize = {}
+                )
+            },
+            drawerState = drawerState
         ) {
             Scaffold(
                 topBar = {
