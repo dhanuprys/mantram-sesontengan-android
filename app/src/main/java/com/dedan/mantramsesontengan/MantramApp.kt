@@ -3,6 +3,7 @@ package com.dedan.mantramsesontengan
 import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -283,7 +285,7 @@ fun FontSelectorItem(
             Text("A", fontSize = fontSize)
         },
         label = {
-            Text("Besar", fontSize = fontSize)
+            Text(text = "Besar", fontSize = fontSize)
         },
         selected = selected,
         onClick = onClick,
@@ -296,12 +298,23 @@ fun MantramAppDrawer(
     redirectTo: (String, Boolean) -> Unit,
     currentFontSize: TypographySize,
     changeFontSize: (TypographySize) -> Unit,
-    requestClose: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    requestClose: () -> Unit = {}
 ) {
     val itemPadding = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
 
     ModalDrawerSheet(modifier = modifier) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(20.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = null,
+                modifier = Modifier.size(150.dp)
+            )
+        }
         NavigationDrawerItem(
             icon = {
                 Icon(imageVector = Icons.Filled.Home, contentDescription = null)
