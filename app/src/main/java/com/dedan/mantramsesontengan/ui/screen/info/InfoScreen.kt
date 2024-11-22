@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dedan.mantramsesontengan.MantramAppBar
 import com.dedan.mantramsesontengan.R
@@ -53,8 +54,9 @@ fun InfoBody(modifier: Modifier = Modifier) {
             .fillMaxSize()
     ) {
         Text(
-            "Info Aplikasi",
-            modifier = Modifier.weight(1f)
+            "Mantram Sesontengan",
+            textAlign = TextAlign.Center,
+            modifier = Modifier.weight(1f).fillMaxWidth()
         )
         Row(
             horizontalArrangement = Arrangement.Center,
